@@ -1,5 +1,5 @@
 ::comments
-::bat文件开头 核心使用wmic命令
+::use wmic command
 ::usually used:
 ::wmic computersystem get *
 ::wmic cpu get * 
@@ -11,14 +11,12 @@
 
 @echo off
 runas /savecred /user:administrator "C:\Windows\system32\cmd.exe" >nul 2>nul
-mode con cols=300 lines=100 >nul 2>nul
-title=XingLinTech  v=2.0  support:shaozl@xinglin-tech.com>nul 2>nul
+mode con cols=150 lines=100 >nul 2>nul
+title=XingLinTech  v=2.1  support:shaozl@xinglin-tech.com>nul 2>nul
 color 02
 
 
 ::code
-
-::enabledelayedexpansion 启用延迟功能,  enableextensions  启用了命令扩展
 setlocal enableextensions enabledelayedexpansion
 
 for /f "delims=" %%l in ('wmic os get Caption^,OSArchitecture^,CSName^,TotalVirtualMemorySize^,FreeVirtualMemory^,FreePhysicalMemory^,TotalVisibleMemorySize^  /format:list') do >nul 2>&1 set "OS_%%l"
@@ -26,6 +24,7 @@ set /a OS_UsedPhysicalMemory=OS_TotalVisibleMemorySize-OS_FreePhysicalMemory
 for /f "delims=" %%l in ('wmic cpu get Name^,NumberOfCores^,NumberOfLogicalProcessors^ /format:list') do >nul 2>&1 set "CPU_%%l"
 for /f "delims=" %%l in ('wmic baseboard get Manufacturer^,Product^,SerialNumber^ /format:list') do >nul 2>&1 set "BaseBoard_%%l"
 for /f "delims=" %%l in ('wmic bios get BIOSVersion^ /format:list') do >nul 2>&1 set "BIOS_%%l"
+
 
 for /f "delims=" %%l in ('wmic diskdrive get Caption^,Size /format:list') do (
     >nul 2>&1 set "TEMP_%%l"
@@ -48,7 +47,7 @@ for /f "delims=" %%l in ('wmic diskdrive get Caption^,Size /format:list') do (
       set /a e1=!TEMP_Size:~0,3!/1
     )
 
-    if !num! GTR 9 if not "!TEMP_Caption:~1,1!" == ":"   if defined TEMP_Size set .               +  HardDisk_!TEMP_Caption:~0,－1!=!TEMP_Size:~0,-1! Byte  -~-  !e1! G   &set TEMP_Caption=&set TEMP_Size=
+    if !num! GTR 9 if not "!TEMP_Caption:~1,1!" == ":"   if defined TEMP_Size set .               +  HardDisk_!TEMP_Caption:~0,-1!=!TEMP_Size:~0,-1! Byte  ≈  !e1! G   &set TEMP_Caption=&set TEMP_Size=
 
 )
 
@@ -77,9 +76,12 @@ for /f "delims=" %%l in ('wmic volume get DriveLetter^,Capacity /format:list') d
 
 
     
-    if !num2! GTR 9 if "!TEMP_DriveLetter:~1,1!"==":" if defined TEMP_Capacity  set _               +  StorageSpace_!TEMP_DriveLetter:~0,2!=!TEMP_Capacity:~0,-1! Byte  -~- !e2! G  &set TEMP_DriveLetter=&set TEMP_Capacity=
+    if !num2! GTR 9 if "!TEMP_DriveLetter:~1,1!"==":" if defined TEMP_Capacity  set _               +  StorageSpace_!TEMP_DriveLetter:~0,2!=!TEMP_Capacity:~0,-1! Byte  ≈  !e2! G  &set TEMP_DriveLetter=&set TEMP_Capacity=
 
 )
+
+
+
 
 ::Change Kib to G 
 set /a a2=%OS_FreeVirtualMemory%/1000/1000
@@ -120,7 +122,7 @@ echo                   %date% %time%
 echo                                                  ===============================
 
 
-::输出空的一行  操作系统信息
+
 echo.
 
 echo                 +********************************************************+
@@ -136,14 +138,14 @@ set /p=     ".               | OS_CSName:                 | "<nul
 echo %OS_CSName%
 echo                 +----------------------------+----------------------------
 set /p=     ".               | OS_TotalVirtualMemorySize: | "<nul 
-echo %OS_TotalVirtualMemorySize% KiB  -~-  !b1!~!b2! G
+echo %OS_TotalVirtualMemorySize% KiB  ≈  !b1!~!b2! G
 echo                 +----------------------------+----------------------------
 set /p=     ".               | OS_FreeVirtualMemory:      | "<nul 
-echo %OS_FreeVirtualMemory% KiB  -~-  !a1!~!a2! G
+echo %OS_FreeVirtualMemory% KiB  ≈  !a1!~!a2! G
 echo                 +----------------------------+----------------------------
 
 
-::输出空的一行  CPU信息
+
 echo.
 
 echo                 +********************************************************+
@@ -160,7 +162,7 @@ echo %CPU_NumberOfLogicalProcessors%
 echo                 +----------------------------+----------------------------
 
 
-::输出空的一行  主板信息
+
 echo.
 
 echo                 +********************************************************+
@@ -177,20 +179,20 @@ echo %BaseBoard_SerialNumber%
 echo                 +----------------------------+----------------------------
 
 
-::输出空的一行  内存信息
+
 echo.
 
 echo                 +********************************************************+
 echo                 ^|                         MemoryInfo                     ^|
 echo                 +****************************+***************************+
 set /p=     ".               | OS_FreePhysicalMemory:     | "<nul 
-echo %OS_FreePhysicalMemory% KiB  -~-  !c1!~!c2! G
+echo %OS_FreePhysicalMemory% KiB  ≈  !c1!~!c2! G
 echo                 +----------------------------+----------------------------
 set /p=     ".               | OS_TotalVisibleMemorySize: | "<nul 
-echo %OS_TotalVisibleMemorySize% KiB  -~-  !d1!~!d2! G
+echo %OS_TotalVisibleMemorySize% KiB  ≈  !d1!~!d2! G
 echo                 +----------------------------+----------------------------
 
-::输出空的一行  BIOS信息
+
 echo.
 
 echo                 +********************************************************+
@@ -200,7 +202,9 @@ set /p=     ".               | BIOS_BIOSVersion:          | "<nul
 echo %BIOS_BIOSVersion%
 echo                 +----------------------------+----------------------------
 
-::输出空的一行  分盘信息
+
+
+
 echo.
 
 
@@ -210,7 +214,7 @@ echo                 +********************************************************+
 set _               +  StorageSpace_
 echo                 +---------------------------------------------------------
 
-::输出空的一行  硬盘信息
+
 echo.
 
 echo                 +********************************************************+
@@ -222,10 +226,6 @@ echo                 +---------------------------------------------------------
 
 
 
-
-
-
-echo. 
 echo.
 
 echo                 +********************************************************+
@@ -235,7 +235,7 @@ wmic nicconfig where IPEnabled=TRUE get Description,IPAddress,IPSubnet,MacAddres
 echo ***********************************************************************************************************************
 
 
-::输出空的一行  表示执行结束
+
 echo.
 echo                 +--------------------------------------------------------+ 
 echo                 ^|------------------------finished------------------------^|
@@ -244,11 +244,13 @@ echo.
 
 
 
-
-::结尾
 pause
 
-::版本更新说明
+
+::end
+pause
+
+::version histort
 ::v1.0->v1.1
 ::1、美化了输出格式,用“ ” 代替了 “.”；
 ::2、将磁盘分区和硬盘信息分开显示
@@ -287,5 +289,5 @@ goto :eof
 ::-------------------------------------------------------------
 
 ::-------------------------声明-------------------------------
-::  此工具为杭州杏林信息科技有限公司原创，如若在此基础上进行修改，
-::请说明参照来源：杭州杏林信息科技有限公司工程部。谢谢！
+::    此工具为杭州杏林信息科技有限公司原创，如若在此基础上进行修改，
+::请说明参照来源：杭州杏林信息科技有限公司研发部。谢谢！
