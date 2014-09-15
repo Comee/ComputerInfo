@@ -48,7 +48,7 @@ for /f "delims=" %%l in ('wmic diskdrive get Caption^,Size /format:list') do (
       set /a e1=!TEMP_Size:~0,3!/1
     )
 
-    if !num! GTR 9 if not "!TEMP_Caption:~1,1!" == ":"   if defined TEMP_Size set .               +  HardDisk_!TEMP_Caption:~0,20!=!TEMP_Size:~0,-1! Byte  -~-  !e1! G   &set TEMP_Caption=&set TEMP_Size=
+    if !num! GTR 9 if not "!TEMP_Caption:~1,1!" == ":"   if defined TEMP_Size set .               +  HardDisk_!TEMP_Caption:~0,－1!=!TEMP_Size:~0,-1! Byte  -~-  !e1! G   &set TEMP_Caption=&set TEMP_Size=
 
 )
 
