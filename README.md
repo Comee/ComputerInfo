@@ -8,5 +8,5 @@ Computer Hardware Information(电脑硬件信息的bat脚本),包括内存、主
 主要技术：wmic知识
 
 注意事项：
-在进行硬盘大小转换时：比如byte到G的转换，没有采用向后兼容的方式（有待改进）。
+双击打开文件后，若没有出现运行结果，请在按一下 <kbd>ENTER</kbd> 键
 
